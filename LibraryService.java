@@ -18,8 +18,7 @@ public interface LibraryService {
     // This method is used to create a book record by taking book type objects
 	Book saveBook(Book book);
 	
-	//This method is used to get all books from the database.
-	//List<Book>  getBooksFromDb();
+	
 	
 	//This method is used to get a book record from database using "bisbn" as reference or search element.
 	Book getBookByISBN(Integer book_isbn);
@@ -35,12 +34,7 @@ public interface LibraryService {
 	void deleteAllBooks();
 	
 	
-	//List<Book> checkIfBookPublished(Boolean booleanObj)throws Exception;
-    //List<Book> fetchDataByISBN(int bisbn);
-    //List<Book> fetchDataByName(String bname);
-    //List<Book> fetchMatchingDataByISBN(int bisbn );
-    //List<Book> fetchPublishedBookByISBN(Boolean isPublished);
-
+	
 	//This method returns the books based on search and filter operations.
 	List<Book> getBooksFromDb(String bookName);
 	

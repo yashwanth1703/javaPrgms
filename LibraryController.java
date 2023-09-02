@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,9 @@ import libraryManagement.ServiceImplementation.*;
  * The @RestController used to specify the controller used for this project and controlling every class.
  */
 
-//@RequestMapping("/library.com
+@RequestMapping("/library.com")
 @RestController
+@CrossOrigin
 public class LibraryController {
 
 	
@@ -59,6 +61,9 @@ private LibraryServiceImplementation libraryService;
 		}
 	}
 	
+	
+	
+	
    //This is the update API method updates the specified record in database 
 	@PutMapping("/updateBook/{bisbn}")
 	public ResponseEntity<Book>updateBookByISBN(@PathVariable("bisbn") Integer bisbn,
@@ -73,6 +78,73 @@ private LibraryServiceImplementation libraryService;
 	}
 	
 	
+	@GetMapping("/sortByPrice/{direction}")
+	public ResponseEntity<List<Book>> getAllBooksByPriceSort(@PathVariable("direction") String direction, @RequestParam(required = true)String fieldName){
+		System.out.println(direction);
+		try {
+		List<Book> books = new ArrayList<Book>();
+		books = libraryService.sortByPrice(direction, fieldName);
+		if(books.isEmpty())
+			return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+		
+	    return new ResponseEntity<List<Book>>(books,HttpStatus.OK);
+	    
+	}
+		catch(Exception exc) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	@GetMapping("/SortByRating/{direction}")
+	public ResponseEntity<List<Book>> getAllBooksByRatingSort(@PathVariable("direction") String direction, @RequestParam(required = true)String fieldName){
+		try {
+		List<Book> books = new ArrayList<Book>();
+		books = libraryService.sortByRating(direction, fieldName);
+		if(books.isEmpty())
+			return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+		
+	    return new ResponseEntity<List<Book>>(books,HttpStatus.OK);
+	    
+	}
+		catch(Exception exc) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	@GetMapping("/SortByAuthor/{direction}")
+	public ResponseEntity<List<Book>> getAllBooksByAuthorSort(@PathVariable("direction") String direction, @RequestParam(required = true)String fieldName){
+		try {
+		List<Book> books = new ArrayList<Book>();
+		books = libraryService.sortByAuthor(direction, fieldName);
+		if(books.isEmpty())
+			return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+		
+	    return new ResponseEntity<List<Book>>(books,HttpStatus.OK);
+	    
+	}
+		catch(Exception exc) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	@GetMapping("/SortByBookName/{direction}")
+	public ResponseEntity<List<Book>> getAllBooksByBookNameSort(@PathVariable("direction") String direction, @RequestParam(required = true)String fieldName){
+		try {
+		List<Book> books = new ArrayList<Book>();
+		books = libraryService.sortByBookName(direction, fieldName);
+		if(books.isEmpty())
+			return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
+		
+	    return new ResponseEntity<List<Book>>(books,HttpStatus.OK);
+	    
+	}
+		catch(Exception exc) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
 			
 	//This is get all records API method returns all records in database
 	@GetMapping("/readAllBooks")
@@ -97,30 +169,13 @@ private LibraryServiceImplementation libraryService;
 		}
 	}
 
-	//@GetMapping("readForEmail/{email}")
-	//public List<Book> getEmpsByEmailId(@PathVariable("email") String email){
-		//return  libServ.getEmpsRecByEmail(email);
-	//}
 
-
-//	@GetMapping("/readByFirstAndLast/{fname}/{lname}")
-//	public List<Book> getEmpsByNames(@PathVariable("fname") String fname,@PathVariable("lname") String lname){
-//		return  libServ.getEmpsRecByNames(fname, lname);
-//	}
-
-//	@GetMapping("/readAllEmpWithFirstName/{name}")
-//	public List<Employee> getAllEmpsByFirstName(@PathVariable("name") String fname){
-//		return  empServ.getEmpsRecByFirstName(fname);
-//	}
-	//localhost:8080/edubridge.com/readEmp/5
-	
-	
 	
 	
 	//This is get by id API method returns specific record when callled
 	@GetMapping("/readBook/{bisbn}")
 	
-	public ResponseEntity<Book>  getBookByISBN(@PathVariable("bisbn")  Integer bisbn){
+	public ResponseEntity<Book>getBookByISBN(@PathVariable("bisbn")  Integer bisbn){
 		try {
 		return new ResponseEntity<Book>(libraryService.getBookByISBN(bisbn), HttpStatus.OK);
 	}
@@ -141,19 +196,7 @@ private LibraryServiceImplementation libraryService;
 	}
 	
 	
-//	@GetMapping("/fetchDataByISBN/{bisbn}")
-//	public void fetchByISBN(@PathVariable("bisbn") int bisbn) {
-//		List<Book> book = 
-//	}
-//	@GetMapping("/checkPublishedBook/{booleanObj}")
-//	public void  checkingPublishedBook(@PathVariable("booleanObj") Boolean booleanObj) {
-//		try {
-//			libServ.checkIfBookPublished(booleanObj);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+
 	
 	//This is boolean API method which returns true or false based on is published entity.
 	@GetMapping("/ispublished")
@@ -188,5 +231,21 @@ private LibraryServiceImplementation libraryService;
 		catch(Exception exc) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+		@GetMapping("/getAllBooksByAuthorName")
+		public ResponseEntity<List<Book>> getAllBooksByAuthor(@RequestParam(required = true)String book_author){
+			try {
+			List<Book> books = new ArrayList<Book>();
+			books = libraryService.fetchBookByAuthorIgnoringCase(book_author);
+		    
+		    if(books.isEmpty()) {
+		    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		    }
+		   return new ResponseEntity<List<Book>>(books,HttpStatus.OK);    
+		}
+			catch(Exception exc) {
+				return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
 }
-}
+

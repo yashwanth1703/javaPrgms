@@ -1,4 +1,5 @@
 package libraryManagement.ServiceImplementation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import libraryManagement.Model.*;
 import libraryManagement.Repository.*;
 import libraryManagement.Service.*;
+import org.springframework.data.domain.Sort;
 
 /* This is the implementation class for service interface.
  * In this class all the methods present in the service interface are overriden.
@@ -33,7 +35,7 @@ public class LibraryServiceImplementation implements LibraryService{
 
 	@Override
 	public List<Book> getBooksFromDb(String bookName) {
-		// TODO Auto-generated method stub
+		
 		
 		return libraryRepository.findAll();
 	}
@@ -76,7 +78,7 @@ public class LibraryServiceImplementation implements LibraryService{
 
 	@Override
 	public void deleteBookByISBN(Integer book_isbn) {
-		// TODO Auto-generated method stub
+	
 		Optional<Book> book = libraryRepository.findById(book_isbn);
 		if(book.isPresent()) {
 			libraryRepository.deleteById(book_isbn);
@@ -95,7 +97,7 @@ public class LibraryServiceImplementation implements LibraryService{
 
 		@Override
 		public void deleteAllBooks() {
-			// TODO Auto-generated method stub
+			
 			libraryRepository.deleteAll();
 			System.out.println("All Books are deleted");
 			
@@ -105,16 +107,51 @@ public class LibraryServiceImplementation implements LibraryService{
 			Iterable<Book> book = libraryRepository.findByBookNameContainingIgnoreCase(book_name);
 			return book;
 		}
-//		public List<Book>fetchBooksInOrder(int book_isbn){
-//			List<Book> book = libraryRepository.findByBookISBNOrderByBookNameAsc(book_isbn);
-//			return book;
-//		}
+		
+		public List<Book>fetchBookByAuthorIgnoringCase(String book_author){
+			List<Book> book = new ArrayList<Book>();
+			libraryRepository.findByAuthorContainingIgnoreCase(book_author).forEach(book::add);
+			
+			return book;
 
-//		@Override
-//		public List<Book> getBooksFromDb() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
 	}
+		
+		private Sort.Direction getSortDirection(String direction) {
+		    if (direction.equalsIgnoreCase("asc")) {
+		      return Sort.Direction.ASC;
+		    } else if (direction.equalsIgnoreCase("desc")) {
+		      return Sort.Direction.DESC;
+		    }
 
+		    return Sort.Direction.ASC;
+		  }
+		
+		
+		public  List<Book> sortByPrice(String direction, String fieldName) {
+			
+			List<Book> book = new ArrayList<Book>();
+			book = libraryRepository.findAll(Sort.by(getSortDirection(direction), fieldName));
+			return book;
+		}
+       public  List<Book> sortByRating(String direction, String fieldName) {
+			
+			List<Book> book = new ArrayList<Book>();
+			book = libraryRepository.findAll(Sort.by(getSortDirection(direction), fieldName));
+			return book;
+		}
+       
+       public  List<Book> sortByAuthor(String direction, String fieldName) {
+			
+			List<Book> book = new ArrayList<Book>();
+			book = libraryRepository.findAll(Sort.by(getSortDirection(direction), fieldName));
+			return book;
+		}
+       public  List<Book> sortByBookName(String direction, String fieldName) {
+			
+			List<Book> book = new ArrayList<Book>();
+			book = libraryRepository.findAll(Sort.by(getSortDirection(direction), fieldName));
+			return book;
+		}
+     
+}
 

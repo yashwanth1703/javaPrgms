@@ -21,7 +21,7 @@ public class LibraryManagement {
     // main class for starting project
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryManagement.class, args);
-		
+
 	}
 
 }
