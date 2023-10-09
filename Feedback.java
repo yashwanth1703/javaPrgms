@@ -1,9 +1,16 @@
 package libraryManagement.Model;
 
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -11,8 +18,28 @@ import jakarta.validation.constraints.Min;
 public class Feedback {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer feedBackId;
+	private Integer feedBackId;   //45334
 	
+	@Min(value=1, message="Rating must be in range of 1-5")
+	@Max(value=5, message="Rating must be in range of 1-5")
+	private Integer bookRating;  //434344
+	
+	@Min(value=1, message="Rating must be in range of 1-5")
+	@Max(value=5, message="Rating must be in range of 1-5")
+	private Integer overallRating; //34344
+	
+	private String comments; //rtrttrtr
+
+	
+	@ManyToOne
+	@JsonIgnore
+	private LibraryUser user;  //all the attr of lib user entity class
+	
+	@ManyToOne
+	@JsonIgnore
+	@OnDelete(action=OnDeleteAction.CASCADE)
+
+	private Book book;
 	
 	@Override
 	public String toString() {
@@ -68,20 +95,5 @@ public class Feedback {
 		this.book = book;
 	}
 
-	@Min(value=1, message="Rating must be in range of 1-5")
-	@Max(value=5, message="Rating must be in range of 1-5")
-	private Integer bookRating;
 	
-	@Min(value=1, message="Rating must be in range of 1-5")
-	@Max(value=5, message="Rating must be in range of 1-5")
-	private Integer overallRating;
-	
-	private String comments;
-
-	
-	@OneToOne
-	private LibraryUser user;
-	
-	@OneToOne
-	private Book book;
 }

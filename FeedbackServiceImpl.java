@@ -32,7 +32,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			
 			Optional<Book> bookObj = libraryRepository.findById(bookId);
 			if (bookObj.isEmpty()) {
-				throw new Exception("Bus is not present with Id: "+ bookId);
+				throw new Exception("Book is not present with Id: "+ bookId);
 			}
 			Optional<LibraryUser> user = libUserRepo.findById(userId);//.orElseThrow(()-> new UserException("User not found!"));
 			if (user.isEmpty()) {
@@ -71,5 +71,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 		throw new Exception("No feedbacks found!");
 	
 	}
+
+
+	@Override
+	public void deleteFeedbacks() {
+	 feedBackRepository.deleteAll();
+	 System.out.println("All feedbacks are deleted");
+		
+	}
+	
 
 }
